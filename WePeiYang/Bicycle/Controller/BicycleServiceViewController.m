@@ -73,13 +73,17 @@
     //改变 statusBar 颜色
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
-    //添加 icon
+    //添加 icon, 后加icon，才在上面
     if (!self.didAddIcon){
         [self addIcons];
         self.didAddIcon = YES;
     }
     
-    
+    //改变 notificationIcon
+    [NotificationList.sharedInstance getList:^(){
+        NSLog(@"1");
+        [self changeNotificationIcon];
+    }];
 }
 
 - (void)viewDidLoad {
@@ -99,8 +103,9 @@
     self.titleLabel.text = @"地图";
     [self.titleLabel sizeToFit];
     
-    //特地的防灾后面
+    //特地的放在后面
     [super viewDidLoad];
+    
     
     
 }
@@ -133,6 +138,17 @@
     
 }
 
+- (void)changeNotificationIcon {
+    
+    NSLog(@"2, %d", NotificationList.sharedInstance.didGetNewNotification);
+    
+    if (NotificationList.sharedInstance.didGetNewNotification) {
+        self.notificationIconImageView.image = [UIImage imageNamed:@"公告2"];
+    } else {
+        [self.notificationIconImageView setImage:[UIImage imageNamed:@"公告"]];
+    }
+}
+
 - (void)changeIconImageView:(UIImageView *)imageView width:(CGFloat)width {
     if (imageView.frame.size.width == width){
         return;
@@ -163,7 +179,7 @@
         [self changeIconImageView:self.notificationIconImageView width:SMALL_ICON_WIDTH];
         
         //刷新按钮
-        UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:nil];
+        UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshUserInfo)];
         self.navigationItem.rightBarButtonItem = refreshButton;
         
         //用户绑定
@@ -181,8 +197,16 @@
         
         self.navigationItem.rightBarButtonItem = nil;
         
+        //处理 icon
+        NotificationList.sharedInstance.didGetNewNotification = NO;
+        [self.notificationIconImageView setImage:[UIImage imageNamed:@"公告"]];
     }
     
+}
+
+- (void)refreshUserInfo {
+    BicycleServiceInfoController *infoVC = (BicycleServiceInfoController *)self.currentViewController;
+    [infoVC refreshInfo];
 }
 
 - (void)didReceiveMemoryWarning {

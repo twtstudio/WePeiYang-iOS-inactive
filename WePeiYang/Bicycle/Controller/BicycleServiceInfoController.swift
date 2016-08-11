@@ -78,6 +78,17 @@ class BicycleServiceInfoController: UIViewController, UITableViewDelegate, UITab
         super.didReceiveMemoryWarning()
     }
     
+    func refreshInfo() {
+        if BicycleUser.sharedInstance.status == 1 {
+            BicycleUser.sharedInstance.getUserInfo({
+                self.updateUI()
+            })
+        } else {
+            MsgDisplay.showErrorMsg("未绑定自行车卡信息")
+            infoLabel.text = "未绑定自行车卡信息"
+        }
+    }
+    
     //dataScoure of chartView
     func numberOfLinesInLineChartView(lineChartView: JBLineChartView!) -> UInt {
         return 1

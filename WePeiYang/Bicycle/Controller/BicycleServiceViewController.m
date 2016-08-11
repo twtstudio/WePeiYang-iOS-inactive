@@ -154,11 +154,17 @@
         [self changeIconImageView:self.infoIconImageView width:SMALL_ICON_WIDTH];
         [self changeIconImageView:self.notificationIconImageView width:SMALL_ICON_WIDTH];
         
+        self.navigationItem.rightBarButtonItem = nil;
+        
     } else if ([[info objectForKey:@"index"] integerValue] == 1){
         self.titleLabel.text = @"信息";
         [self changeIconImageView:self.mapIconImageView width:SMALL_ICON_WIDTH];
         [self changeIconImageView:self.infoIconImageView width:BIG_ICON_WIDTH];
         [self changeIconImageView:self.notificationIconImageView width:SMALL_ICON_WIDTH];
+        
+        //刷新按钮
+        UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:nil];
+        self.navigationItem.rightBarButtonItem = refreshButton;
         
         //用户绑定
         if ([BicycleUser.sharedInstance.status isEqual:@0] && !BicycleUser.sharedInstance.bindCancel){
@@ -172,6 +178,8 @@
         [self changeIconImageView:self.mapIconImageView width:SMALL_ICON_WIDTH];
         [self changeIconImageView:self.infoIconImageView width:SMALL_ICON_WIDTH];
         [self changeIconImageView:self.notificationIconImageView width:BIG_ICON_WIDTH];
+        
+        self.navigationItem.rightBarButtonItem = nil;
         
     }
     
